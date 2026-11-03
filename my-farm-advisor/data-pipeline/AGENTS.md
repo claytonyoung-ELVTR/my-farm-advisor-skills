@@ -10,7 +10,7 @@ Edits should stay in this folder and its children unless the user explicitly ask
 
 ## Read nearby docs first
 
-Read `README.md` first. Review `scripts/install.sh`, `src/scripts/bootstrap_runtime.py`, and `src/scripts/run_farm_pipeline.py` before changing runtime or pipeline behavior. Read `../data-sources/INDEX.md` for related rebuild and reporting workflows.
+Read `README.md` first. Review `scripts/install.sh`, `src/scripts/bootstrap_runtime.py`, and `src/scripts/run_farm_pipeline.py` before changing runtime or pipeline behavior. Read `grower-web-map/GUIDE.md` before changing the grower web-map generator. Read `../data-sources/INDEX.md` for related rebuild and reporting workflows.
 
 ## Runtime contract
 
