@@ -58,6 +58,22 @@ def grower_dir(grower_slug: str) -> Path:
     return _data_root_path("growers", validate_path_slug(grower_slug, "grower_slug"))
 
 
+def grower_derived_dir(grower_slug: str) -> Path:
+    return grower_dir(grower_slug) / "derived"
+
+
+def grower_reports_dir(grower_slug: str) -> Path:
+    return grower_derived_dir(grower_slug) / "reports"
+
+
+def grower_web_map_basename(grower_slug: str) -> str:
+    return f"{validate_path_slug(grower_slug, 'grower_slug')}_web_map.html"
+
+
+def grower_web_map_path(grower_slug: str) -> Path:
+    return grower_reports_dir(grower_slug) / grower_web_map_basename(grower_slug)
+
+
 def grower_manifest_dir(grower_slug: str) -> Path:
     return grower_dir(grower_slug) / "manifests"
 

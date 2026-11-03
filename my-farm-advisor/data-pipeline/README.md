@@ -217,3 +217,23 @@ bash -lc 'export DATA_PIPELINE_DATA_ROOT=/absolute/path/to/my-farm-advisor-runti
 
 This ensures every pipeline step (including geopandas/rasterio operations) uses
 the shared environment that lives alongside the replicated scripts.
+
+## Grower web maps
+
+[grower-web-map](grower-web-map/README.md) generates one lightweight interactive
+HTML field map per grower from the downloaded `field_boundaries.geojson`
+polygons. The map uses MapLibre GL JS with ESRI World Imagery satellite tiles
+loaded from the internet; no imagery or bundle is embedded in the HTML.
+
+```bash
+export DATA_PIPELINE_DATA_ROOT=/absolute/path/to/my-farm-advisor-runtime
+cd "${DATA_PIPELINE_DATA_ROOT}/data-pipeline/src"
+"${DATA_PIPELINE_DATA_ROOT}/data-pipeline/.venv/bin/python" \
+  scripts/reporting/generate_grower_web_map.py --all
+```
+
+Outputs land at
+`growers/<grower>/derived/reports/<grower>_web_map.html`. Use
+`--grower-slug <slug>` for a single grower or `--output <path>` to override the
+destination. See [grower-web-map/GUIDE.md](grower-web-map/GUIDE.md) for the data
+contract, map behavior, and troubleshooting.
