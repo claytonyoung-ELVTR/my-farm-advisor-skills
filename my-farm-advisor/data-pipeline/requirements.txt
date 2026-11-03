@@ -15,7 +15,9 @@ rasterstats>=0.19
 
 # Storage / interchange
 pyarrow>=15
-xarray>=2024.3
+# xarray 2026.9.0 passes zarr_format= into zarr 2.x open_consolidated/open_group,
+# which raises TypeError against zarr<3. Keep the resolver below that regression.
+xarray>=2024.3,<2026.9
 zarr<3
 fsspec[http]>=2024.3
 

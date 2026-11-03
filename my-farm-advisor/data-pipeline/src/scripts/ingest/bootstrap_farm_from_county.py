@@ -34,10 +34,19 @@ from naming import field_slug_from_id
 from paths import DATA_ROOT, SCRIPTS_ROOT, farm_boundary_path, farm_manifest_dir, shared_geoadmin_counties_dir
 
 OVERPASS_URLS = [
+    "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
     "https://overpass-api.de/api/interpreter",
     "https://overpass.kumi.systems/api/interpreter",
     "https://lz4.overpass-api.de/api/interpreter",
 ]
+# Some hosts front Overpass with an egress filter that rejects the default
+# python-requests/bot user agent with HTTP 406/504. These headers are accepted
+# by every mirror above and keep the query body unchanged.
+OVERPASS_HEADERS = {
+    "User-Agent": "Mozilla/5.0 (X11; Linux x86_64)",
+    "Accept": "*/*",
+    "Accept-Encoding": "identity",
+}
 COUNTIES_PATH = shared_geoadmin_counties_dir() / "counties_usa.geojson"
 
 
@@ -108,15 +117,31 @@ def _query_overpass_bbox(bbox: tuple[float, float, float, float]) -> dict:
     """
     last_error: Exception | None = None
     for endpoint in OVERPASS_URLS:
-        for attempt in range(1, 4):
-            try:
-                response = requests.post(endpoint, data={"data": query}, timeout=240)
-                response.raise_for_status()
-                return response.json()
-            except Exception as exc:
-                last_error = exc
-                if attempt < 3:
-                    time.sleep(2.0 * attempt)
+        # Prefer GET: some reachable mirrors return HTTP 504 for large POST
+        # bodies but serve the same query reliably as a GET parameter.
+        for use_get in (True, False):
+            for attempt in range(1, 4):
+                try:
+                    if use_get:
+                        response = requests.get(
+                            endpoint,
+                            params={"data": query},
+                            timeout=240,
+                            headers=OVERPASS_HEADERS,
+                        )
+                    else:
+                        response = requests.post(
+                            endpoint,
+                            data={"data": query},
+                            timeout=240,
+                            headers=OVERPASS_HEADERS,
+                        )
+                    response.raise_for_status()
+                    return response.json()
+                except Exception as exc:
+                    last_error = exc
+                    if attempt < 3:
+                        time.sleep(2.0 * attempt)
     raise RuntimeError(f"Overpass query failed for all endpoints: {last_error}")
 
 
