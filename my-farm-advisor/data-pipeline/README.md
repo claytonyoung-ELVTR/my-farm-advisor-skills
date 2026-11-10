@@ -8,6 +8,9 @@ Soil provider selection by boundary `country`:
 Per-year crop rotation/crop-type sources by country (CDL, AAFC ACI, and the
 keyless WorldCereal default-model path for every other country):
 [references/crop-rotation-sources.md](references/crop-rotation-sources.md).
+Grower-level interactive field map (one lightweight HTML page per grower on a
+satellite basemap, clickable fields, zoom-to-field list):
+[grower-webmap/README.md](grower-webmap/README.md).
 ## Example renders
 
 Vision-QC'd sample figures ship under [`examples/`](examples/) — one
